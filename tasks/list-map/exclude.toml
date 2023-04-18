@@ -1,0 +1,4 @@
+exclude = [
+  # Markdown can't express for-loops
+  "md"
+]

@@ -22,7 +22,7 @@ class Markdown(Doclang):
         contents = sp.check_output(
             shlex.split(f"npm exec commonmark {filename}")
         ).decode("utf-8")
-        output = output_dir / "markdown.html"
+        output = output_dir / "md.html"
         output.write_text(TEMPLATE.render(contents=contents))
 
 

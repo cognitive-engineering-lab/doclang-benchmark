@@ -1,0 +1,9 @@
+export const items = ["Milk", "Eggs", "Cheese"];
+
+Today I am going shopping for:
+
+<ul>
+  {items.map((item, i) => (
+    <li key={i}><p>{item}</p></li>
+  ))}
+</ul>

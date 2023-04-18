@@ -2,17 +2,14 @@ from docbench import Doclang, template
 import subprocess as sp
 import shlex
 from pathlib import Path
-from tempfile import TemporaryDirectory
-import os
 
 TEMPLATE = template(
     r"""
-\documentclass[11pt]{article}
-\usepackage{xcolor}
+#lang scribble/base
 
-\begin{document}
+@(require scribble/core scribble/html-properties)
+
 {{ contents }}
-\end{document}
 """
 )
 
@@ -20,9 +17,9 @@ TEMPLATE = template(
 class Latex(Doclang):
     def install(self):
         try:
-            sp.check_call(shlex.split("which pdflatex"))
+            sp.check_call(shlex.split("which scribble"))
         except sp.CalledProcessError:
-            raise Exception("You have to have pdflatex installed")
+            sp.check_call(shlex.split("raco pkg install scribble"))
 
     def run(self, filename, output_dir, tmpdir):
         contents = filename.read_text()
@@ -30,9 +27,9 @@ class Latex(Doclang):
         elaborated_filename = Path(tmpdir) / filename.name
         elaborated_filename.write_text(elaborated)
 
-        sp.check_call(shlex.split(f"pdflatex {elaborated_filename}"), cwd=tmpdir)
-        output_filename = Path(tmpdir) / f"{filename.stem}.pdf"
-        output_filename.rename(output_dir / "tex.pdf")
+        sp.check_call(shlex.split(f"scribble {elaborated_filename}"), cwd=tmpdir)
+        output_filename = Path(tmpdir) / f"{filename.stem}.html"
+        output_filename.rename(output_dir / "scrbl.html")
 
 
 Latex.main()

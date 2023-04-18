@@ -1,0 +1,10 @@
+\def\items{Milk,Eggs,Cheese}
+
+Today I am going shopping for:
+
+\begin{enumerate}
+  \makeatletter
+  \@for\itm:=\items\do{
+    \item \itm
+  }
+\end{enumerate}
