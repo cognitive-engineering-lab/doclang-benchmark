@@ -18,17 +18,17 @@ def run_one(task, tool):
     try:
         impl_path = TASK_DIR / task / f"{task}.{tool}"
         if not impl_path.exists():
-            impl_path = TASK_DIR / task / tool
-            if not impl_path.exists():
+            impl_dir = TASK_DIR / task / tool
+            if not impl_dir.exists():
                 print("Warning: missing file for tool {tool} on task {task}")
-                return None                
+                return None
+            impl_path = impl_dir / f"{task}.{tool}"
 
         cmd = f"python3 run.py run {impl_path}"
         cwd = TOOL_DIR / tool
-        sp.check_call(shlex.split(cmd), cwd=cwd)
+        stdout = sp.check_output(shlex.split(cmd), cwd=cwd).decode("utf-8")
+        return Path(stdout.splitlines()[-1])
 
-        # TODO: generalize to all extensions
-        return OUTPUT_DIR / task / f"{tool}.html"
     except sp.CalledProcessError:
         print(f"Failure: task: {task} / tool: {tool}")
         return None

@@ -46,5 +46,7 @@ class Jsx(Doclang):
         output_html = HTML_TEMPLATE.render(contents=output_js)
         output_path.write_text(output_html)
 
+        return output_path
+
 
 Jsx.main()

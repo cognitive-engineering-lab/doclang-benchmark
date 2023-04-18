@@ -31,5 +31,7 @@ class Latex(Doclang):
         output_filename = Path(tmpdir) / f"{filename.stem}.html"
         output_filename.rename(output_dir / "scrbl.html")
 
+        return output_filename
+
 
 Latex.main()

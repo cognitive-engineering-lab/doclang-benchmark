@@ -68,4 +68,5 @@ class Doclang(ABC):
                 if debug:
                     print(tmpdir)
 
-                doclang.run(input, output_dir, tmpdir=tmpdir)
+                output_path = doclang.run(input, output_dir, tmpdir=tmpdir)
+                print(output_path)

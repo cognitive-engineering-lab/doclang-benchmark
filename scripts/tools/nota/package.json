@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@nota-lang/nota": "^0.4.12"
+  }
+}

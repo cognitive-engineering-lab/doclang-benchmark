@@ -34,5 +34,7 @@ class Latex(Doclang):
         output_filename = Path(tmpdir) / f"{filename.stem}.pdf"
         output_filename.rename(output_dir / "tex.pdf")
 
+        return output_filename
+
 
 Latex.main()

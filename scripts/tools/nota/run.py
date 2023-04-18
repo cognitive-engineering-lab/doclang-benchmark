@@ -14,13 +14,14 @@ class LivingPapers(Doclang):
         node_modules = heredir / "node_modules"
         (tmpdir / "node_modules").symlink_to(node_modules)
 
-        cmd = f"./node_modules/.bin/lpub {filename.name}"
+        cmd = f"./node_modules/.bin/nota build {filename.name}"
         sp.check_call(shlex.split(cmd), cwd=tmpdir)
 
-        output_subdir = output_dir / "lpub"
+        output_subdir = output_dir / "nota"
         output_subdir.mkdir(exist_ok=True)
 
-        files = [tmpdir / "index.html", tmpdir / "bundle.css", tmpdir / "bundle.js"]
+        dist = tmpdir / "dist"
+        files = [dist / "index.html", dist / "index.css", dist / "index.mjs"]
         for f in files:
             if f.exists():
                 f.rename(output_subdir / f.name)
@@ -28,4 +29,4 @@ class LivingPapers(Doclang):
         return output_subdir / "index.html"
 
 
-LivingPapers.main()
+LivingPapers.main(debug=True)

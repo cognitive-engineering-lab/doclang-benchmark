@@ -4,12 +4,14 @@ import shlex
 from pathlib import Path
 import shutil
 
-JS = """
+JS_TEMPLATE = template(
+    """
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Document from "./input.mdx";
+import Document from "./{{ filename }}";
 ReactDOM.createRoot(document.getElementById("root")).render(<Document />);
 """
+)
 
 HTML_TEMPLATE = template(
     """
@@ -36,11 +38,10 @@ class Jsx(Doclang):
         node_modules = heredir / "node_modules"
         (tmpdir / "node_modules").symlink_to(node_modules)
 
-        shutil.copy(filename, tmpdir / "input.mdx")
         shutil.copy(heredir / "build.mjs", tmpdir / "build.mjs")
 
         js_path = tmpdir / "input.jsx"
-        js_path.write_text(JS)
+        js_path.write_text(JS_TEMPLATE.render(filename=filename.name))
 
         cmd = f"node build.mjs"
         output_js = sp.check_output(shlex.split(cmd), cwd=tmpdir).decode("utf-8")
@@ -48,6 +49,8 @@ class Jsx(Doclang):
         output_path = output_dir / "mdx.html"
         output_html = HTML_TEMPLATE.render(contents=output_js)
         output_path.write_text(output_html)
+
+        return output_path
 
 
 Jsx.main()

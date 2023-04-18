@@ -1,1 +1,5 @@
-{"devDependencies":{"commonmark":"^0.30.0"}}
+{
+  "devDependencies": {
+    "commonmark": "^0.30.0"
+  }
+}
