@@ -1,0 +1,11 @@
+# TODO: THIS ONE DOESN'T WORK YET
+<https://github.com/uwdata/living-papers/issues/93>
+
+~~~ js { hide=true }
+items = ["Milk", "Eggs", "Cheese"]
+~~~
+
+Today I am going shopping for:
+
+::: bullet-list { items=`items` }
+:::

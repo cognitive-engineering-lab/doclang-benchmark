@@ -1,0 +1,10 @@
+{
+  "living-papers": {
+    "components": [
+      {
+        "name": "bullet-list",
+        "file": "bullet-list.js"      
+      }
+    ]
+  }
+}

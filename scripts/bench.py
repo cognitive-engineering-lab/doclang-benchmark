@@ -16,12 +16,14 @@ TOOLS = os.listdir(TOOL_DIR)
 
 def run_one(task, tool):
     try:
-        file_path = TASK_DIR / task / f"{task}.{tool}"
-        if not file_path.exists():
-            print("Warning: missing file for tool {tool} on task {task}")
-            return None
+        impl_path = TASK_DIR / task / f"{task}.{tool}"
+        if not impl_path.exists():
+            impl_path = TASK_DIR / task / tool
+            if not impl_path.exists():
+                print("Warning: missing file for tool {tool} on task {task}")
+                return None                
 
-        cmd = f"python3 run.py run {file_path}"
+        cmd = f"python3 run.py run {impl_path}"
         cwd = TOOL_DIR / tool
         sp.check_call(shlex.split(cmd), cwd=cwd)
 
