@@ -27,6 +27,7 @@ HTML_TEMPLATE = template(
 
 heredir = Path(__file__).parent
 
+
 class Jsx(Doclang):
     def install(self):
         sp.check_call(shlex.split("npm install"))

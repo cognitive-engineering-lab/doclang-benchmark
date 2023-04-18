@@ -26,6 +26,7 @@ HTML_TEMPLATE = template(
 """
 )
 
+
 class Jsx(Doclang):
     def install(self):
         sp.check_call(shlex.split("npm install"))
