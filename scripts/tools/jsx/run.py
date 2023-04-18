@@ -5,10 +5,10 @@ from pathlib import Path
 
 JS_TEMPLATE = template(
     """
-import React from "react";
+import React, {useState} from "react";
 import ReactDOM from "react-dom/client";
-let component = {{ contents }};
-ReactDOM.createRoot(document.getElementById("root")).render(component);
+let Component = (() => {{ contents }});
+ReactDOM.createRoot(document.getElementById("root")).render(<Component />);
 """
 )
 

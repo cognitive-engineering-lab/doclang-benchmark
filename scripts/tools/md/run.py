@@ -14,7 +14,7 @@ TEMPLATE = template(
 )
 
 
-class Markdown(Doclang):
+class CommonMark(Doclang):
     def install(self):
         sp.check_call(shlex.split("npm install"))
 
@@ -27,4 +27,4 @@ class Markdown(Doclang):
         return output_path
 
 
-Markdown.main()
+CommonMark.main()

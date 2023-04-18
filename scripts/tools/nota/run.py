@@ -1,12 +1,19 @@
-from docbench import Doclang
+from docbench import Doclang, template
 import subprocess as sp
 import shlex
 from pathlib import Path
 
 heredir = Path(__file__).parent
 
+NOTA_TEMPLATE = template(
+    """
+% import {useState} from "react";
+{{ contents }}
+"""
+)
 
-class LivingPapers(Doclang):
+
+class Nota(Doclang):
     def install(self):
         sp.check_call(shlex.split("npm install"))
 
@@ -14,7 +21,12 @@ class LivingPapers(Doclang):
         node_modules = heredir / "node_modules"
         (tmpdir / "node_modules").symlink_to(node_modules)
 
-        cmd = f"./node_modules/.bin/nota build {filename.name}"
+        contents = filename.read_text()
+        elaborated = NOTA_TEMPLATE.render(contents=contents)
+        elaborated_path = tmpdir / "index.nota"
+        elaborated_path.write_text(elaborated)
+
+        cmd = f"./node_modules/.bin/nota build {elaborated_path}"
         sp.check_call(shlex.split(cmd), cwd=tmpdir)
 
         output_subdir = output_dir / "nota"
@@ -29,4 +41,4 @@ class LivingPapers(Doclang):
         return output_subdir / "index.html"
 
 
-LivingPapers.main(debug=True)
+Nota.main(debug=True)

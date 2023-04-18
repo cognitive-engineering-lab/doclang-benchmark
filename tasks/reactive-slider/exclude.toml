@@ -1,0 +1,7 @@
+exclude = [
+  # Can't support scripting
+  "md",
+  
+  # Can't support runtime JS
+  "scrbl"
+]

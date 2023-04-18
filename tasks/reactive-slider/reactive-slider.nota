@@ -1,0 +1,8 @@
+% let [value, setValue] = useState(50);
+
+.@input[
+  type: "range", min: 0, max: 100, defaultValue: value,
+  onChange: event => setValue(event.target.valueAsNumber)
+]
+
+The current value is: #value.

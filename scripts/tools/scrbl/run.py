@@ -14,7 +14,7 @@ TEMPLATE = template(
 )
 
 
-class Latex(Doclang):
+class Scribble(Doclang):
     def install(self):
         try:
             sp.check_call(shlex.split("which scribble"))
@@ -34,4 +34,4 @@ class Latex(Doclang):
         return output_filename
 
 
-Latex.main()
+Scribble.main()

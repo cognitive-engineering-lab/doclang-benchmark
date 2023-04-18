@@ -1,0 +1,9 @@
+``` js {hide=true}
+value = 50
+```
+
+``` js { bind=value }
+Inputs.range([0, 100], {step: 1})
+```
+
+The current value is: `js value`.

@@ -30,7 +30,7 @@ HTML_TEMPLATE = template(
 heredir = Path(__file__).parent
 
 
-class Jsx(Doclang):
+class Mdx(Doclang):
     def install(self):
         sp.check_call(shlex.split("npm install"))
 
@@ -53,4 +53,4 @@ class Jsx(Doclang):
         return output_path
 
 
-Jsx.main()
+Mdx.main()

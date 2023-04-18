@@ -1,0 +1,14 @@
+import {observable, action} from "mobx";
+import {observer} from "mobx-react";
+export const state = observable({value: 50});
+export const ValueView = observer(() => <>{state.value}</>);
+
+<input
+  type="range"
+  min={0}
+  max={100}
+  defaultValue={state.value}
+  onChange={action((event) => { state.value = event.target.valueAsNumber})}
+/>
+
+The current value is: <ValueView />.
