@@ -1,0 +1,3 @@
+The **quick** <span style="color:red">red</span> _fox_ jumped
+
+over the lazy brown dog.
