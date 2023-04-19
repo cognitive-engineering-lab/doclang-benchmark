@@ -7,7 +7,7 @@ JS_TEMPLATE = template(
     """
 import React, {useState} from "react";
 import ReactDOM from "react-dom/client";
-let Component = (() => {{ contents }});
+let Component = () => {{ contents }};
 ReactDOM.createRoot(document.getElementById("root")).render(<Component />);
 """
 )

@@ -1,4 +1,4 @@
 exclude = [
-  # Markdown can't express for-loops
+  # Can't support scripting
   "md"
 ]

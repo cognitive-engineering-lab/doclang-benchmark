@@ -1,7 +1,8 @@
 exclude = [
   # Can't support scripting
   "md",
-  
-  # Can't support runtime JS
+
+  # Can't support runtime js
+  "tex",
   "scrbl"
 ]
