@@ -2,7 +2,7 @@
 
 ## Setup
 
-Prerequisites: [npm] and [pdflatex].
+Prerequisites: [npm], [pdflatex], and [pandoc].
 
 ```
 cd scripts
@@ -48,7 +48,7 @@ General thoughts:
 
 Other candidates for inclusion:
 * [Markdoc](https://markdoc.dev/): seems to only support compile-time computation.
-* [Pandoc](https://pandoc.org/): used by Living Papers and Quarto, so probably just pick one of those instead.
+* [Pandoc][pandoc]: used by Living Papers and Quarto, so probably just pick one of those instead.
 * [Quarto](https://quarto.org/): very similar to Living Papers, unclear if we need another comparison.
 * [Pollen](https://docs.racket-lang.org/pollen/): relatively niche, mostly a contrast to Scribble.
 * [reStructuredText](https://docutils.sourceforge.io/rst.html): more customizable than Markdown but seems to be static-only.
@@ -61,3 +61,4 @@ Other candidates for inclusion:
 [Nota]: https://nota-lang.org/
 [Living Papers]: https://github.com/uwdata/living-papers/
 [Scribble]: https://docs.racket-lang.org/scribble/index.html
+[pandoc]: https://pandoc.org/

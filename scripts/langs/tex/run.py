@@ -2,8 +2,6 @@ from docbench import Doclang, template
 import subprocess as sp
 import shlex
 from pathlib import Path
-from tempfile import TemporaryDirectory
-import os
 
 TEMPLATE = template(
     r"""

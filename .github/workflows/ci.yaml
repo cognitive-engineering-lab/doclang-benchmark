@@ -1,0 +1,33 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "v*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      CI: "1"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+      - uses: Bogdanp/setup-racket@v1.10
+        with:
+          version: 'stable'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - uses: r-lib/actions/setup-pandoc@v2
+        with:
+          pandoc-version: '2.19.2'
+      - run: |
+          cd scripts
+          pip3 install -e .
+          python3 bench.py install
+          python3 bench.py all

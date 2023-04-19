@@ -3,7 +3,7 @@ from pathlib import Path
 import subprocess as sp
 import shlex
 import argparse
-import toml
+import tomli
 
 REPO_ROOT = Path(__file__).parent.parent
 TASK_DIR = REPO_ROOT / "tasks"
@@ -12,6 +12,9 @@ OUTPUT_DIR = REPO_ROOT / "output"
 
 TASKS = os.listdir(TASK_DIR)
 LANGS = os.listdir(LANG_DIR)
+
+if os.getenv("CI") is not None:
+    LANGS.remove("tex")
 
 
 def run_one(task, lang):
@@ -44,7 +47,9 @@ def run_install(lang):
 def load_exclude(task):
     exclude_path = TASK_DIR / task / "exclude.toml"
     return (
-        toml.loads(exclude_path.read_text())["exclude"] if exclude_path.exists() else []
+        tomli.loads(exclude_path.read_text())["exclude"]
+        if exclude_path.exists()
+        else []
     )
 
 
@@ -68,12 +73,16 @@ if args.subcommand == "one":
         sp.check_call(["open", output_path])
 
 elif args.subcommand == "all":
+    failed = False
     for task in TASKS:
         exclude = load_exclude(task)
         for lang in LANGS:
             if lang in exclude:
                 continue
-            run_one(task, lang)
+            failed |= run_one(task, lang) is None
+    
+    if failed:
+        exit(1)
 
 elif args.subcommand == "install":
     for lang in LANGS:
