@@ -30,11 +30,12 @@ Brainstorm for other tasks:
 * Complex data structures: pass around a fancy object that can't be stringifed as an HTML attribute
 * Macros: custom functions that are sprinkled around the text. Or maybe just definitions/references?
 * Errors: what kinds of undefined behavior is permitted by the complex runtime-enabled frameworks?
+* Abstraction power: Adding a new kind of definition to your lang, eg Shriram's literate Racket example. Or a glossary. Or a [concordance](https://en.wikipedia.org/wiki/Concordance_(publishing))??
 
 General thoughts:
 * Goal is to measure the *languages* more than their *component libraries*. How can we distinguish between those two?
 * Are character length / token length going to be useful measures? Might be interesting to count the *number of unique language mechanisms*, eg for langs that have a gajillion special cases.
-
+* Use Cognitive Dimension and Technical Dimensions
 
 ## Languages
 
@@ -52,6 +53,8 @@ Other candidates for inclusion:
 * [Quarto](https://quarto.org/): very similar to Living Papers, unclear if we need another comparison.
 * [Pollen](https://docs.racket-lang.org/pollen/): relatively niche, mostly a contrast to Scribble.
 * [reStructuredText](https://docutils.sourceforge.io/rst.html): more customizable than Markdown but seems to be static-only.
+* [Typst](https://typst.app/)
+* [AsciiDoc](https://asciidoc.org/)
 
 [npm]: https://npmjs.org/
 [pdflatex]: https://www.math.rug.nl/~trentelman/jacob/pdflatex/pdflatex.html
