@@ -24,7 +24,8 @@ let ex4 () =
         List_ [String "Will"; String "Shriram"], "x", 
         [TString "<li>"; TExpr (Var "x"); TString "</li>"]); 
       TString "</ul>"]) in
-  Printf.printf "%s\n" (eval (desugar_expr e))
+  let[@warning "-partial-match"] String s = eval (desugar_expr e) in
+  Printf.printf "%s\n" s
 
 
 let ex5 () = 
@@ -47,7 +48,7 @@ let ex7 () =
   let open Model.Trees.DTreeTmpl in 
   let e = Template([
       TBlockLet("x", EString "a");
-      TPara [TInlineExpr (Var "x"); TInlineExpr (Var "x'")]
+      TPara [TInlineExpr (Var "x"); TInlineExpr (Var "x")]
     ]) in
   let d = to_doc (eval (desugar e)) in
   print_endline (show_doc d)

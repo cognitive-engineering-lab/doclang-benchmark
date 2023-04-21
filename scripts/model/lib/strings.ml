@@ -181,18 +181,19 @@ module DStrTmpl3 = struct
     | Foreach (e1', y, e2') -> Foreach (subst x e1 e1', x, if x = y then e2' else subst x e1 e2')
     | Template _ -> raise Unreachable
 
-  let rec eval e = match e with
-    | String s -> s
+  let[@warning "-partial-match"] rec eval e = match e with
+    | String s -> String s
     | Var _ -> raise Undefined_behavior
-    | Concat (e1, e2) -> (eval e1) ^ (eval e2)
-    | Let (x, e1, e2) -> eval (subst x (String (eval e1)) e2)
-    | List_ _ -> raise Undefined_behavior
+    | Concat (e1, e2) -> 
+      let (String s1, String s2) = (eval e1, eval e2) in
+      String (s1 ^ s2)
+    | Let (x, e1, e2) -> eval (subst x (eval e1) e2)
+    | List_ es -> List_ (List.map eval es)
     | Foreach (e1, x, e2) -> 
-      List.map (fun e -> eval (subst x (String e) e2)) (eval_list e1)
-      |> List.fold_left (^) ""
-    | Template _ -> raise Unreachable
-  and eval_list (e: expr) : string list = match e with
-    | List_ es -> List.map eval es
-    | _ -> raise Undefined_behavior
+      let List_ es = eval e1 in 
+      String (List.map (fun e -> eval (subst x e e2)) es
+      |> List.map (fun (String s) -> s)
+      |> List.fold_left (^) "")
+    | Template _ -> raise Unreachable  
 end 
 

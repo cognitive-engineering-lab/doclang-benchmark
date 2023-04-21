@@ -107,6 +107,7 @@ module DTreeTmpl = struct
   open TreeDoc
 
   type var = string
+  [@@deriving show]
 
   type expr = 
     | EString of string
@@ -130,6 +131,7 @@ module DTreeTmpl = struct
     | TBold of ttext 
     | TInlineLet of var * expr
     | TInlineExpr of expr
+  [@@deriving show]
 
   let rec desugar (e : expr) : expr = match e with
     | EString s -> EString s
@@ -164,8 +166,8 @@ module DTreeTmpl = struct
 
   let rec subst x e1 e2 = match e2 with
     | EString s -> EString s
-    | EBold e -> EBold (subst x e1 e)
-    | EPara e -> EPara (subst x e1 e)
+    | EBold e' -> EBold (subst x e1 e')
+    | EPara e' -> EPara (subst x e1 e')
     | ESection (e1', e2') -> ESection (subst x e1 e1', subst x e1 e2')
     | List_ es -> List_ (List.map (subst x e1) es)
     | Cons (e1', e2') -> Cons (subst x e1 e1', subst x e1 e2')
