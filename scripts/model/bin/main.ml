@@ -53,6 +53,24 @@ let ex7 () =
   let d = to_doc (eval (desugar e)) in
   print_endline (show_doc d)
 
+let ex8 () = 
+  let open Model.Trees.TreeDoc in 
+  let open Model.Reactivity.DReactVar in 
+  let e = 
+    List_ [
+      List_ [EPara (List_ [EString "The current state is: "; Var "state"])];
+      Concat (Var "state", EString "x")
+    ] 
+  in
+  let s0 = EString "" in
+  let ev = EString "click" in 
+  let (d1, s1) = step e s0 ev in
+  print_endline (show_doc d1);
+  print_endline (show_expr s1);
+  let (d2, s2) = step e s1 ev in
+  print_endline (show_doc d2);
+  print_endline (show_expr s2)
+
 let () = 
   ex1();
   ex2();
@@ -60,4 +78,5 @@ let () =
   ex4();
   ex5();
   ex6();
-  ex7()
+  ex7();
+  ex8()

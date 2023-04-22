@@ -58,6 +58,7 @@ module DTreeVar = struct
   open TreeDoc
 
   type var = string  
+  [@@deriving show]
 
   type expr = 
     | EString of string
@@ -67,6 +68,7 @@ module DTreeVar = struct
     | List_ of expr list
     | Let of var * expr * expr
     | Var of var
+  [@@deriving show]
 
   let rec subst x e1 e2 = match e2 with
     | EString s -> EString s

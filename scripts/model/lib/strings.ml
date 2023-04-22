@@ -192,8 +192,8 @@ module DStrTmpl3 = struct
     | Foreach (e1, x, e2) -> 
       let List_ es = eval e1 in 
       String (List.map (fun e -> eval (subst x e e2)) es
-      |> List.map (fun (String s) -> s)
-      |> List.fold_left (^) "")
+              |> List.map (fun (String s) -> s)
+              |> List.fold_left (^) "")
     | Template _ -> raise Unreachable  
 end 
 
