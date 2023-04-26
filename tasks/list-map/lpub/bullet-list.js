@@ -1,6 +1,6 @@
-import { DependentElement } from "@living-papers/components";
+import { ArticleElement } from "@living-papers/components";
 
-export default class BulletList extends DependentElement {
+export default class BulletList extends ArticleElement {
   static get properties() {
     return {
       items: { type: Array },

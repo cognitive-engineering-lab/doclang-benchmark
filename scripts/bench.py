@@ -12,6 +12,7 @@ OUTPUT_DIR = REPO_ROOT / "output"
 
 TASKS = os.listdir(TASK_DIR)
 LANGS = os.listdir(LANG_DIR)
+VERBOSE = False
 
 if os.getenv("CI") is not None:
     LANGS.remove("tex")
@@ -26,9 +27,11 @@ def run_one(task, lang):
                 print("Warning: missing file for lang {lang} on task {task}")
                 return None
             impl_path = impl_dir / f"{task}.{lang}"
-
-        print(f"Running task {task} with lang {lang}")
+        
         cmd = f"python3 run.py run {impl_path}"
+        print(f"Running task {task} with lang {lang}")
+        if VERBOSE:
+            print(f"  {cmd}")
         cwd = LANG_DIR / lang
         stdout = sp.check_output(shlex.split(cmd), cwd=cwd).decode("utf-8")
         return Path(stdout.splitlines()[-1])
@@ -55,17 +58,19 @@ def load_exclude(task):
 
 def cli():
     parser = argparse.ArgumentParser()
+    parser.add_argument("-v", "--verbose", action="store_true")
     subcommands = parser.add_subparsers(dest="subcommand")
     one_cmd = subcommands.add_parser("one")
     one_cmd.add_argument("task")
     one_cmd.add_argument("lang")
-    one_cmd.add_argument("--open", action="store_true")
+    one_cmd.add_argument("--open", action="store_true")    
     subcommands.add_parser("all")
     subcommands.add_parser("install")
     return parser.parse_args()
 
 
 args = cli()
+VERBOSE = args.verbose
 
 if args.subcommand == "one":
     output_path = run_one(args.task, args.lang)

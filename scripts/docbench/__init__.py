@@ -50,8 +50,10 @@ class Doclang(ABC):
             doclang.install()
         elif args.subcommand == "run":
             input = Path(args.filename).resolve()
+            rel_input = input.relative_to(REPO_ROOT)
 
-            output_dir = REPO_ROOT / "output" / input.parent.name
+            task = rel_input.parts[1]
+            output_dir = REPO_ROOT / "output" / task
             output_dir.mkdir(parents=True, exist_ok=True)
 
             tmpdir_ctx = persistent_tmpdir() if debug else tempfile.TemporaryDirectory()
@@ -59,11 +61,13 @@ class Doclang(ABC):
             with tmpdir_ctx as tmpdir:
                 tmpdir = Path(tmpdir)
 
-                if input.is_file():
-                    shutil.copy(input, tmpdir / input.name)
+                # if input has multiple files it should have the path
+                # tasks/<task>/<lang>/<main file>                
+                if len(rel_input.parts) == 4:                    
+                    for file in os.listdir(input.parent):                        
+                        shutil.copy(input.parent / file, tmpdir / file)
                 else:
-                    for file in os.listdir(input):
-                        shutil.copy(input / file, tmpdir / file)
+                   shutil.copy(input, tmpdir / input.name)
 
                 if debug:
                     print(tmpdir)
