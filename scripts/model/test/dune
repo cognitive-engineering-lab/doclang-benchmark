@@ -1,2 +1,3 @@
 (test
- (name model))
+ (name tests)
+ (libraries model))

@@ -29,6 +29,11 @@ module Expr = struct
   module Show = Open_func.Make(struct
       type input = t
       type output = string
+    end) 
+
+  module Is_article = Open_func.Make(struct
+      type input = t
+      type output = bool
     end)
 
   let eval = Eval.call
@@ -36,7 +41,10 @@ module Expr = struct
   let subst = Subst.call
   let desugar = Desugar.call
   let show = Show.call
-  let desugar_eval e = eval (desugar e)
+  let is_article = Is_article.call
+  let desugar_eval e = eval (desugar e)  
+
+  (* let () = Eval.register (fun e -> Printf.printf "ERROR: %s\n" (show e); Open_func.noop ()) *)
 end
 
 module type ExprFragment = sig
@@ -45,6 +53,7 @@ module type ExprFragment = sig
   val subst : var * Expr.t * Expr.t -> Expr.t
   val desugar : Expr.t -> Expr.t
   val show : Expr.t -> string
+  val is_article : Expr.t -> bool
 end
 
 module MakeExprFragment(F: ExprFragment) = struct

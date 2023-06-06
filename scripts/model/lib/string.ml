@@ -1,6 +1,7 @@
 [@@@warning "-partial-match"]
 
 open Base
+module StdString = Stdlib.String
 
 module DStrLit = struct
   type Expr.t += String of string
@@ -16,6 +17,7 @@ module DStrLit = struct
   let show = function String s -> Printf.sprintf "\"%s\"" s
 
   let eval_list = Open_func.noop
+  let is_article = Open_func.noop
 end
 module DStrLitFrag = MakeExprFragment(DStrLit)
 
@@ -32,7 +34,7 @@ module DStrProg = struct
       let (String s1, String s2) = (Expr.eval e1, Expr.eval e2) in
       String (s1 ^ s2)
     | Let (x, e1, e2) -> Expr.eval(Expr.subst (x, (Expr.eval e1), e2))
-    | Var _ -> raise Undefined_behavior    
+    | Var _ -> raise Undefined_behavior
 
   (* Boring code *)
 
@@ -54,6 +56,7 @@ module DStrProg = struct
     | Var x -> x
 
   let eval_list = Open_func.noop
+  let is_article = Open_func.noop
 end
 module DStrProgFrag = MakeExprFragment(DStrProg)
 
@@ -61,7 +64,7 @@ module DStrTLit = struct
   open DStrLit
   open Template
 
-  type Template.t += TStr of string | TInlineExpr of Expr.t
+  type Template.t += TStr of string | TExpr of Expr.t
 
   type Expr.t += 
     | List of Expr.t list
@@ -76,7 +79,7 @@ module DStrTLit = struct
       Expr.eval (List (e1 :: xs))
     | Join e -> 
       let List l = Expr.eval e  in      
-      let s = String.concat "" (List.map (fun e -> match e with 
+      let s = StdString.concat "" (List.map (fun e -> match e with 
           | String s -> s 
           | _ -> raise Undefined_behavior) l) in
       String s
@@ -103,7 +106,7 @@ module DStrTLit = struct
 
   let desugar_template = function
     | TStr s -> String s
-    | TInlineExpr e -> Expr.desugar e    
+    | TExpr e -> Expr.desugar e    
 
   (* Boring code *)
 
@@ -114,15 +117,17 @@ module DStrTLit = struct
     | StrTmpl _ -> raise Not_desugared    
 
   let rec show = function
-    | List es -> Printf.sprintf "[%s]" (String.concat ", " (List.map Expr.show es))
+    | List es -> Printf.sprintf "[%s]" (StdString.concat ", " (List.map Expr.show es))
     | Cons (e1, e2) -> Printf.sprintf "%s :: %s" (Expr.show e1) (Expr.show e2)
     | Join e -> Printf.sprintf "join(%s)" (Expr.show e)
     | StrTmpl kt -> Printf.sprintf "`%s`" (show_ttext kt)
-  and show_ttext kt = (String.concat "" (List.map Template.show kt))
+  and show_ttext kt = (StdString.concat "" (List.map Template.show kt))
 
   let show_template = function
     | TStr s -> s
-    | TInlineExpr e -> Printf.sprintf "{%s}" (Expr.show e)    
+    | TExpr e -> Printf.sprintf "{%s}" (Expr.show e)    
+
+  let is_article = Open_func.noop
 end
 module DStrTLitFrag = MakeExprFragment(DStrTLit)
 module DStrTLitInlineFrag = MakeTemplateFragment(DStrTLit)
@@ -136,8 +141,8 @@ module DStrTProg = struct
     | Foreach of Expr.t * var * Expr.t
     | Splice of Expr.t
   type Template.t +=
-    | TInlineSet of var * Expr.t
-    | TInlineForeach of Expr.t * var * ttext
+    | TSet of var * Expr.t
+    | TForeach of Expr.t * var * ttext    
 
   let eval = function
     | Foreach (e1, x, e2) ->
@@ -152,10 +157,10 @@ module DStrTProg = struct
       List (l1 @ l2)
 
   let desugar_template_in_context (lt, lts) = match lt with 
-    | TInlineSet (x, e) -> Let (x, e, desugar_template_elems lts)
+    | TSet (x, e) -> Let (x, e, desugar_template_elems lts)
 
   let desugar_template = function
-    | TInlineForeach (e1, x, kt) -> Splice (Foreach (Expr.desugar e1, x, Splice (desugar_template_elems kt)))
+    | TForeach (e1, x, kt) -> Splice (Foreach (Expr.desugar e1, x, Splice (desugar_template_elems kt)))
 
   (* Boring code *)
 
@@ -173,9 +178,10 @@ module DStrTProg = struct
     | Splice e -> Printf.sprintf ",@(%s)" (Expr.show e)
 
   let show_template = function
-    | TInlineForeach (e1, x, kt) -> Printf.sprintf "{{ foreach %s in %s }} %s {{ endforeach }}" x (Expr.show e1) (show_ttext kt)
-    | TInlineSet (x, e) -> Printf.sprintf "{{ %s = %s }}" x (Expr.show e)
+    | TForeach (e1, x, kt) -> Printf.sprintf "{{ foreach %s in %s }} %s {{ endforeach }}" x (Expr.show e1) (show_ttext kt)
+    | TSet (x, e) -> Printf.sprintf "{{ %s = %s }}" x (Expr.show e)
 
+  let is_article = Open_func.noop
 end
 module DStrTProgFrag = MakeExprFragment(DStrTProg)
 module DStrTProgInlineFrag = MakeTemplateFragment(DStrTProg)
