@@ -1,0 +1,16 @@
+\documentclass{article}
+\begin{document}
+\newcommand{\cmdA}[1]{(#1)}
+\newcommand{\cmdB}{\cmdA}
+\newcommand{\cmdC}{ok}
+
+% Can "invoke" a macro expecting arguments without providing arguments,
+% then the next token is taken as the argument.
+\cmdB\cmdC
+
+% But it only looks within the current block (?).
+\cmdB
+
+\cmdC
+
+\end{document}

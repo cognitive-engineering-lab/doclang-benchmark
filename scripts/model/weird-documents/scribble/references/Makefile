@@ -1,0 +1,2 @@
+all:
+	scribble references.scrbl

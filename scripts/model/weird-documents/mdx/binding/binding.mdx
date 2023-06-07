@@ -1,0 +1,14 @@
+export const a = 1
+
+{a}
+
+<div>
+  {/* can only declare  constants at the top-level */}
+  {/* export const b = 1 */}
+
+  {/* iife required for let-bindings */}
+  {(() => {
+    let b = 2;
+    return b;
+  })()}
+</div>
