@@ -2,17 +2,45 @@ type var = string
 
 exception Undefined_behavior
 exception Not_desugared
+exception Type_error of string
+
+module Type = struct
+  type t = ..
+  type ctx_elem = ..
+  type ctx = ctx_elem list
+
+  module Subst = Open_func.Make(struct
+      type input = var * t * t
+      type output = t
+    end)
+
+  module Show = Open_func.Make(struct
+      type input = t
+      type output = string
+    end)
+
+  let subst = Subst.call
+  let show = Show.call
+end
+
+
+module type TypeFragment = sig
+  val type_subst : var * Type.t * Type.t -> Type.t
+  val type_show : Type.t -> string
+end
+
+module MakeTypeFragment(F: TypeFragment) = struct
+  let register () = 
+    Type.Subst.register F.type_subst;
+    Type.Show.register F.type_show;
+end
+
 
 module Expr = struct
   type t = ..
 
   module Eval = Open_func.Make(struct
       type input = t
-      type output = t
-    end)
-
-  module Eval_list = Open_func.Make(struct
-      type input = t * t list
       type output = t
     end)
 
@@ -36,30 +64,32 @@ module Expr = struct
       type output = bool
     end)
 
+  module Typecheck = Open_func.Make(struct
+      type input = Type.ctx * t
+      type output = Type.t
+    end)
+
   let eval = Eval.call
-  let eval_list = Eval_list.call
   let subst = Subst.call
   let desugar = Desugar.call
   let show = Show.call
   let is_article = Is_article.call
+  let typecheck = Typecheck.call
   let desugar_eval e = eval (desugar e)  
-
-  (* let () = Eval.register (fun e -> Printf.printf "ERROR: %s\n" (show e); Open_func.noop ()) *)
 end
 
 module type ExprFragment = sig
   val eval : Expr.t -> Expr.t
-  val eval_list : Expr.t * Expr.t list -> Expr.t
   val subst : var * Expr.t * Expr.t -> Expr.t
   val desugar : Expr.t -> Expr.t
   val show : Expr.t -> string
   val is_article : Expr.t -> bool
+  val typecheck : Type.ctx * Expr.t -> Type.t 
 end
 
 module MakeExprFragment(F: ExprFragment) = struct
   let register () = 
     Expr.Eval.register F.eval;
-    Expr.Eval_list.register F.eval_list;
     Expr.Subst.register F.subst;
     Expr.Desugar.register F.desugar;
     Expr.Show.register F.show;

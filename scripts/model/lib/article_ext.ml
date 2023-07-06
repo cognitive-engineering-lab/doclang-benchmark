@@ -1,5 +1,5 @@
 [@@@warning "-partial-match"]
-
+(* 
 open Base
 open String
 open Article
@@ -46,7 +46,6 @@ end
 module DExtReact = struct
   open DStrLit
   open DStrTLit
-  open DStrTProg
   open DTreeProg 
   open DExtIdent
 
@@ -127,7 +126,7 @@ module DExtReact = struct
     | List es -> Expr.eval (List (List.map docview es))
     | Node (tag, children) -> Node(tag, docview children)
     | AttrNode (tag, attrs, children) -> AttrNode(tag, attrs, docview children)
-    | Instance inst -> Splice (docview inst.children)
+    (* | Instance inst -> Splice (docview inst.children) *)
     | _ -> raise Undefined_behavior
 
 
@@ -215,4 +214,4 @@ module DExtReact = struct
 end
 module DExtReactFrag = MakeExprFragment(DExtReact)
 module DExtReactTemplateFrag = MakeTemplateFragment(DExtReact)
-
+ *)
